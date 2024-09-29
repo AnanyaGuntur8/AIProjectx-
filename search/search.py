@@ -90,108 +90,93 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
     # print("Start's successors:", problem.getSuccessors(problem.getStartState()))
   
     "*** YOUR CODE HERE ***"
-    #defininign my variables
-    # Create a stack to store the nodes to be visited
+    # Stack to store the nodes to be visited, DFS is LIFO
     stack = util.Stack()
-    # Create a set to store the visited nodes
+    # Set to store the visited nodes
     visited_Nodes = set()
-    starting_State = problem.getStartState() #getting the start state of the first node
-    #Cannot pop anthing from the stack unless there is anything in the start state 
-    stack.push((starting_State,[])) #seeting an empty array to add it in  
-    empty_arr = []
-    #if the stack is not empty
+    # Start state of the first node
+    starting_State = problem.getStartState()
+    # Stack cannot be null, so we need to add the starting state and null list of directions to the stack
+    stack.push((starting_State,[]))
     while not stack.isEmpty():
-        #pop the top node from the stack
-        state_curr, direction  = stack.pop()
+        # pop the top node from the stack, separating the state and directions
+        state_curr, directions  = stack.pop()
         if problem.isGoalState(state_curr):
-            return direction
-        #returning the direction of the goal state 
-        #if the state is not visited before
+            return directions # return the directions of the goal state
+        # if the state is not visited before
         if state_curr not in visited_Nodes:
-            #mark the state as visited
+            # mark the state as visited
             visited_Nodes.add(state_curr)
-            #get the successors of the current state
+            # get the successors of the current state
             successors = problem.getSuccessors(state_curr)
-            #for each successor
+            # for each successor
             for successor, action, _ in successors: 
-                #push the successor to the stack, need to add in action as well
+                # push the successor to the stack, need to add in action as well
                 if successor not in visited_Nodes:
-                    stack.push((successor, direction + [action]))
-
-    return empty_arr
-
-
-    
-    util.raiseNotDefined()
+                    stack.push((successor, directions + [action])) # adding the action to the directions list
+    return []
+    #util.raiseNotDefined()
 
 def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    # Queue to store the nodes to be visited, BFS is FIFO
     queue = util.Queue()
+    # Set to store the visited nodes
     visited_Nodes = set()
-
-    #adding it in queue
-    starting_State = problem.getStartState() #getting the start state of the problem
-    queue.push((starting_State,[])) #seeting an empty array to add it in
-    empty_arr = []
-    #if the queue is not empty
+    # Start state of the first node
+    starting_State = problem.getStartState()
+    # Queue cannot be null, so we need to add the starting state and null list of directions to the queue
+    queue.push((starting_State,[]))
     while not queue.isEmpty():
-        #dequeue the top node from the queue
-        state_curr, direction  = queue.pop()
+        # dequeue the top node from the queue, separating the state and directions
+        state_curr, directions  = queue.pop()
         if problem.isGoalState(state_curr):
-            return direction
-        #returning the direction of the goal state
-        #if the state is not visited before
+            return directions # return the directions of the goal state
+        # if the state is not visited before
         if state_curr not in visited_Nodes:
-            #mark the state as visited
+            # mark the state as visited
             visited_Nodes.add(state_curr)
-            #get the successors of the current state
+            # get the successors of the current state
             successors = problem.getSuccessors(state_curr)
-            #for each successor
+            # for each successor
             for successor, action, _ in successors:
                 #enqueue the successor to the queue, need to add in action as well
                 if successor not in visited_Nodes:
-                    queue.push((successor, direction + [action]))
-    return empty_arr
+                    queue.push((successor, directions + [action])) # adding the action to the directions list
+    return []
 
     util.raiseNotDefined()
 
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    #making a pq for the uniform cost 
+    # Priority Queue for the uniform cost 
     pq = util.PriorityQueue()
-    #adding the start state to the pq
-    #making a visited notes set 
+    # Set to store the visited nodes
     visited_Nodes = set()
-    #adding the start state to the visited nodes
+    # Start state of the first node
     starting_State = problem.getStartState()
+    # Queue cannot be null, so we need to add the starting state and null list of directions and cost to the queue
     pq.push((starting_State, [], 0), 0)
-    #making a dictionary to store the cost of each node
-    empty_arr =[]
-    #if the pq is not empty
     while not pq.isEmpty(): 
-        #dequeue the top node from the pq
-        state_curr, direction, cost = pq.pop()
-        #if the state is the goal state
+        # dequeue the top node from the pq, separating the state, directions and cost
+        state_curr, directions, cost = pq.pop()
         if problem.isGoalState(state_curr):
-            return direction
+            return directions # return the directions of the goal state
         if state_curr not in visited_Nodes:
-            #mark the state as visited
+            # mark the state as visited
             visited_Nodes.add(state_curr)
-            #get the successors of the current state
+            # get the successors of the current state
             successors = problem.getSuccessors(state_curr)
-            #for each successor
+            # for each successor
             for successor, action, cost_of_step in successors:
-                #enqueue the successor to the queue, need to add in action as well
+                #e nqueue the successor to the queue, need to add in action as well
                 if successor not in visited_Nodes:
                     total_cost = cost_of_step+ cost 
-                    pq.push((successor, direction + [action], total_cost), total_cost)
+                    pq.push((successor, directions + [action], total_cost), total_cost) # adding the action to the direction, and save the total cost
 
-    return empty_arr
-   
-
-
+    return []
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None) -> float:
@@ -204,7 +189,41 @@ def nullHeuristic(state, problem=None) -> float:
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic) -> List[Directions]:
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # A* search is similar to uniform cost search but with a heuristic function
+    # Priority Queue for the uniform cost
+    pq = util.PriorityQueue()
+    # Set to store the visited nodes
+    visited_Nodes = set()
+    # Dictionary to store the best cost (g()) to reach each state
+    best_cost = {}
+    # Start state of the first node
+    starting_State = problem.getStartState()
+    # Best cost of Start State
+    best_cost[starting_State] = 0 # g() = 0
+    # Queue cannot be null, so we need to add the starting state and null list of directions and cost to the queue
+    pq.push((starting_State, [], 0), 0)
+    while not pq.isEmpty():
+        # dequeue the top node from the pq, separating the state, directions and cost
+        state_curr, directions, cost = pq.pop()
+        if problem.isGoalState(state_curr):
+            return directions  # return the directions of the goal state
+        if state_curr in visited_Nodes and cost > best_cost[state_curr]:
+            continue
+        # mark the state as visited
+        visited_Nodes.add(state_curr)
+        # get the successors of the current state
+        successors = problem.getSuccessors(state_curr)
+        # for each successor
+        for successor, action, cost_of_step in successors:
+            new_cost = cost + cost_of_step  # UCS -> g() = current path cost + cost of step
+            # enqueue the successor to the queue, need to add in action as well
+            if successor not in best_cost or new_cost < best_cost[successor]: # if the new cost is less than the best cost or not visited before
+                heuristic_cost = heuristic(successor, problem) # h() = heuristic cost
+                total_cost = new_cost + heuristic_cost  # f() = g() + h() (new cost + heuristic)
+                best_cost[successor] = new_cost
+                pq.push((successor, directions + [action], new_cost), total_cost) # adding the action to the direction, and save the total cost
+    return []
+    #util.raiseNotDefined()
 
 # Abbreviations
 bfs = breadthFirstSearch
