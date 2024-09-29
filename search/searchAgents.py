@@ -296,24 +296,19 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        # startingPosition = self.startingPosition 
-        # visitedTheCorners = ()
-        # return (startingPosition, visitedTheCorners )
-        util.raiseNotDefined()
+        startingPosition = self.startingPosition 
+        visitedCorners = () # Initialize the visited corners
+        return (startingPosition, visitedCorners)
 
     def isGoalState(self, state: Any):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        #getting the posisiont and the visited corners from state and keeping a track of 
-        # visitedCorners = state
-        # #checking if all the corners are visited
-        # for i_visited in visitedCorners:
-        #     if not i_visited:
-        #         return False
-        # return True
-    #if the state is visited inthe 
-        util.raiseNotDefined()
+        "*** YOUR CODE HERE ***"
+        # Getting the position and the visited corners from state
+        visitedCorners = state[1]
+        # Checking if all the corners are visited
+        return len(visitedCorners) == 4
 
     def getSuccessors(self, state: Any):
         """
@@ -327,15 +322,33 @@ class CornersProblem(search.SearchProblem):
         """
 
         successors = []
-        for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+        # for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
+                # x,y = currentPosition
+                # dx, dy = Actions.directionToVector(action)
+                # nextx, nexty = int(x + dx), int(y + dy)
+                # hitsWall = self.walls[nextx][nexty]
 
-            "*** YOUR CODE HERE ***"
+        "*** YOUR CODE HERE ***"
+        # Check all possible actions
+        for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+            # Unpack current state position
+            x, y = state[0]
+            # Get the next position
+            dx, dy = Actions.directionToVector(action)
+            # Calculate the next position
+            nextx, nexty = int(x + dx), int(y + dy)
+            # Check if the move is legal by checking if next position is not a wall
+            if not self.walls[nextx][nexty]:
+                # Get the visited corners
+                visitedCorners = state[1]
+                # Update the next state
+                if (nextx, nexty) in self.corners and (nextx, nexty) not in visitedCorners:
+                    nextState = ((nextx, nexty), visitedCorners + ((nextx, nexty),)) # Update the next state
+                else:
+                    nextState = ((nextx, nexty), visitedCorners) # Update the next state
+                successors.append((nextState, action, 1)) # Add the successor to the list
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -372,7 +385,17 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    # Get the current position and the visited corners
+    position, visitedCorners = state
+    # Get the unvisited corners
+    unvisitedCorners = [corner for corner in corners if corner not in visitedCorners]
+    # If there are no unvisited corners, return 0
+    if not unvisitedCorners:
+        return 0
+    # Get the closest unvisited corner (using Manhattan distance)
+    closestCorner = min([util.manhattanDistance(position, corner) for corner in unvisitedCorners]) # minimum Manhattan Distance for unvisited corners
+    # Get the distance to the closest unvisited corner
+    return closestCorner
 
 
 
