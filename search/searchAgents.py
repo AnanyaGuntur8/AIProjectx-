@@ -447,14 +447,18 @@ class FoodSearchProblem:
         "Returns successor states, the actions they require, and a cost of 1."
         successors = []
         self._expanded += 1 # DO NOT CHANGE
-        for direction in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+        for direction in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]: # Check all possible actions
+            # Get the current position
             x,y = state[0]
+            # Get the direction
             dx, dy = Actions.directionToVector(direction)
+            # Calculate the next position
             nextx, nexty = int(x + dx), int(y + dy)
-            if not self.walls[nextx][nexty]:
-                nextFood = state[1].copy()
-                nextFood[nextx][nexty] = False
-                successors.append( ( ((nextx, nexty), nextFood), direction, 1) )
+            # Check if the move is legal by checking if next position is not a wall
+            if not self.walls[nextx][nexty]: 
+                nextFood = state[1].copy() # Copy the food grid
+                nextFood[nextx][nexty] = False # Remove the food from the next position
+                successors.append( ( ((nextx, nexty), nextFood), direction, 1) ) # Add the successor to the list
         return successors
 
     def getCostOfActions(self, actions):
@@ -462,13 +466,14 @@ class FoodSearchProblem:
         include an illegal move, return 999999"""
         x,y= self.getStartState()[0]
         cost = 0
+        # Check all actions
         for action in actions:
             # figure out the next state and see whether it's legal
-            dx, dy = Actions.directionToVector(action)
-            x, y = int(x + dx), int(y + dy)
-            if self.walls[x][y]:
+            dx, dy = Actions.directionToVector(action) # Get the direction
+            x, y = int(x + dx), int(y + dy) # Calculate the next position
+            if self.walls[x][y]: # Check if the move is not legal, then return 999999
                 return 999999
-            cost += 1
+            cost += 1 # Increment the cost, if legal
         return cost
 
 class AStarFoodSearchAgent(SearchAgent):
@@ -508,8 +513,11 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     if not foodCoordinates:
         return 0
     # Get the closest food coordinate (using Manhattan distance)
-    #manhattan gets around 13000 nodes however using maze distance will reduce it to around 4000
-    distances_inMaze= [mazeDistance(position, food, problem.startingGameState) for food in foodCoordinates]
+    # closestFood = min([util.manhattanDistance(position, food) for food in foodCoordinates]) # minimum Manhattan Distance for food coordinates
+    # Manhattan gets around 13000 nodes however using maze distance will reduce it to around 4000
+
+    # Get the closest food coordinate (using Maze distance)
+    distances_inMaze= [mazeDistance(position, food, problem.startingGameState) for food in foodCoordinates] # Maze Distance for food coordinates
     # Get the distance to the closest food coordinate
     return max(distances_inMaze)
 
