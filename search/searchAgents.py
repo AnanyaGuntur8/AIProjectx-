@@ -517,9 +517,9 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     # Manhattan gets around 13000 nodes however using maze distance will reduce it to around 4000
 
     # Get the closest food coordinate (using Maze distance)
-    distances_inMaze= [mazeDistance(position, food, problem.startingGameState) for food in foodCoordinates] # Maze Distance for food coordinates
+    closestFood = max([mazeDistance(position, food, problem.startingGameState) for food in foodCoordinates]) # maximum Maze Distance for food coordinates
     # Get the distance to the closest food coordinate
-    return max(distances_inMaze)
+    return closestFood
 
 
 class ClosestDotSearchAgent(SearchAgent):
