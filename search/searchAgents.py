@@ -508,9 +508,10 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     if not foodCoordinates:
         return 0
     # Get the closest food coordinate (using Manhattan distance)
-    closestFood = min([util.manhattanDistance(position, food) for food in foodCoordinates]) # minimum Manhattan Distance for food coordinates
+    #manhattan gets around 13000 nodes however using maze distance will reduce it to around 4000
+    distances_inMaze= [mazeDistance(position, food, problem.startingGameState) for food in foodCoordinates]
     # Get the distance to the closest food coordinate
-    return closestFood
+    return max(distances_inMaze)
 
 
 class ClosestDotSearchAgent(SearchAgent):
@@ -542,6 +543,7 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
+        return search.astar(problem)
         util.raiseNotDefined()
 
 class AnyFoodSearchProblem(PositionSearchProblem):
@@ -576,8 +578,9 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         complete the problem definition.
         """
         x,y = state
-
+        initial_Food = self.food
         "*** YOUR CODE HERE ***"
+        return initial_Food[x][y]
         util.raiseNotDefined()
 
 def mazeDistance(point1: Tuple[int, int], point2: Tuple[int, int], gameState: pacman.GameState) -> int:
