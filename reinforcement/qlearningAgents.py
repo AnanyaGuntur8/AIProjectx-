@@ -169,8 +169,8 @@ class PacmanQAgent(QLearningAgent):
         informs parent of action for Pacman.  Do not change or remove this
         method.
         """
-        action = QLearningAgent.getAction(self,state)
-        self.doAction(state,action)
+        action = QLearningAgent.getAction(self,state) # get the action
+        self.doAction(state,action) # inform parent of the action
         return action
 
 class ApproximateQAgent(PacmanQAgent):
@@ -195,9 +195,9 @@ class ApproximateQAgent(PacmanQAgent):
         """
         "*** YOUR CODE HERE ***"
         qv = 0
-        features = self.featExtractor.getFeatures(state, action)
+        features = self.featExtractor.getFeatures(state, action) # get the features
         for feature in features:
-            qv += self.weights[feature] * features[feature]
+            qv += self.weights[feature] * features[feature] # calculate the Q-value, which is the dot product of the weights and features
         return qv
         util.raiseNotDefined()
 
@@ -206,10 +206,10 @@ class ApproximateQAgent(PacmanQAgent):
            Should update your weights based on transition
         """
         "*** YOUR CODE HERE ***"
-        features = self.featExtractor.getFeatures(state, action)
-        difference = (reward + self.discount * self.computeValueFromQValues(nextState)) - self.getQValue(state, action)
+        features = self.featExtractor.getFeatures(state, action) # get the features
+        difference = (reward + self.discount * self.computeValueFromQValues(nextState)) - self.getQValue(state, action) # calculate the difference, which is the reward + discount * Q-value of the next state - Q-value of the current state
         for feature in features:
-            self.weights[feature] += self.alpha * difference * features[feature]
+            self.weights[feature] += self.alpha * difference * features[feature] # update the weights, w = w + alpha * difference * feature
         return
         util.raiseNotDefined()
 
