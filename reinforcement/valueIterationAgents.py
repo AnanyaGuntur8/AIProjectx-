@@ -87,13 +87,13 @@ class ValueIterationAgent(ValueEstimationAgent):
           value function stored in self.values.
         """
         "*** YOUR CODE HERE ***"
-        q_value = 0 # initialize the Q-value to 0
-        for next_state, prob in self.mdp.getTransitionStatesAndProbs(state, action): # iterate over the transition states and their probabilities
-            if self.values[next_state] is None:
+        qv = 0 # initialize the Q-value to 0
+        for ns, prob in self.mdp.getTransitionStatesAndProbs(state, action): # iterate over the transition states and their probabilities
+            if self.values[ns] is None:
                 continue
-            reward = self.mdp.getReward(state, action, next_state) # get the reward for the transition
-            q_value += prob * (reward + self.discount * self.values[next_state]) # calculate the Q-value
-        return q_value # return the Q-value
+            reward = self.mdp.getReward(state, action, ns) # get the reward for the transition
+            qv += prob * (reward + self.discount * self.values[ns]) # calculate the Q-value
+        return qv # return the Q-value
 
     def computeActionFromValues(self, state):
         """
@@ -112,9 +112,9 @@ class ValueIterationAgent(ValueEstimationAgent):
 
         # Check all possible actions and select the one with the highest Q-value
         for action in self.mdp.getPossibleActions(state): # iterate over all possible actions
-            q_value = self.getQValue(state, action) # get the Q-value for the action
-            if q_value > best_value:  # if the Q-value is higher than the best value, update the best value and best action
-                best_value = q_value
+            qv = self.getQValue(state, action) # get the Q-value for the action
+            if qv > best_value:  # if the Q-value is higher than the best value, update the best value and best action
+                best_value = qv
                 best_action = action
 
         return best_action
