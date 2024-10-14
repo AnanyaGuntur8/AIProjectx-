@@ -91,7 +91,7 @@ def question2e():
     """
     # discouts: prefering the +10 menaning a need for future rewards so closer to 1
     # noise is, has to be somewhat unplanned to avoid the cliff
-    # the game shuld never terminate so that means that the living rewards is higher 
+    # the game shuld never terminate so that means that the living rewards is higher
     #
     answerDiscount = 0.9
     answerNoise = 0.3
